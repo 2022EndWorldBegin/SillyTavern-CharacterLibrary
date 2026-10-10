@@ -3263,17 +3263,6 @@ function setupSettingsModal() {
         if (e.target === settingsModal) closeModal();
     };
     
-    // Close modals only via close button, not backdrop click
-    // Prevent accidental modal closure when clicking the backdrop. Modals can now only be closed using the close button, preventing unsaved character card edits from being lost.
-    const CL_BLOCK_BACKDROP_CLOSE = '.modal-overlay, .cl-modal, .confirm-modal, .cl-confirm-overlay, .vt-dialog-overlay, .ai-studio-overlay';
-    document.addEventListener('click', (e) => {
-        const t = e.target;
-        if (t instanceof Element && t.matches(CL_BLOCK_BACKDROP_CLOSE)) {
-            e.stopPropagation();
-        }
-    }, true);
-
-    
     // Toggle token visibility
     toggleTokenVisibility.onclick = () => {
         const isPassword = chubTokenInput.type === 'password';
@@ -15778,7 +15767,12 @@ function openExpandedFieldEditor(fieldId, fieldLabel) {
     };
     
     document.getElementById('expandFieldClose').onclick = closeExpandModal;
-    expandModal.onclick = (e) => { if (e.target === expandModal) closeExpandModal(); };
+    
+    // Prevent accidental closure of the expanded field editor via backdrop click.
+    // Clicking outside the editor can happen unintentionally while selecting or dragging text,
+    // causing unapplied changes to be lost. The editor can still be closed using the close button or Apply.
+    
+    // expandModal.onclick = (e) => { if (e.target === expandModal) closeExpandModal(); };
     
     // Save/Apply handler
     document.getElementById('expandFieldSave').onclick = () => {
